@@ -33,31 +33,30 @@ function getJSONObjectForMovieRequirement(req) {
 
     return json;
 }
+
 router.post('/movies', verifyToken, (req, res) => {
-router.post('/movies', (req, res) => {
     // Check if request body contains required fields
     if (!req.body.title || !req.body.releaseDate || !req.body.genre || !req.body.actors) {
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
-     const newMovie = new Movie({
+    const newMovie = new Movie({
         title: req.body.title,
         releaseDate: req.body.releaseDate,
         genre: req.body.genre,
         actors: req.body.actors
     });
 
-        newMovie.save()
-            .then(movie => {
-                res.status(201).json({ success: true, message: 'Movie created successfully.', movie });
-            })
-            .catch(error => {
-                res.status(500).json({ success: false, message: 'Failed to create movie.', error });
-            });
+    newMovie.save()
+        .then(movie => {
+            res.status(201).json({ success: true, message: 'Movie created successfully.', movie });
+        })
+        .catch(error => {
+            res.status(500).json({ success: false, message: 'Failed to create movie.', error });
         });
-    });
+});
 
 router.get('/movies', verifyToken, (req, res) => {
-   Movie.find()
+    Movie.find()
         .then(movies => {
             res.status(200).json({ success: true, movies });
         })
@@ -66,7 +65,6 @@ router.get('/movies', verifyToken, (req, res) => {
         });
 });
 
-router.get('/movies', verifyToken, (req, res) => {
 router.get('/movies/:id', (req, res) => {
     Movie.findById(req.params.id)
         .then(movie => {
@@ -78,11 +76,9 @@ router.get('/movies/:id', (req, res) => {
         .catch(error => {
             res.status(500).json({ success: false, message: 'Failed to retrieve movie.', error });
         });
-    });
 });
 
 router.get('/movies', verifyToken, (req, res) => {
-router.get('/movies/:id', (req, res) => {
     Movie.aggregate([
         {
             $lookup: {
@@ -106,10 +102,9 @@ router.get('/movies/:id', (req, res) => {
         } else {
             res.status(200).json({ success: true, movies });
         }
-        });
     });
 });
-router.put('/movies', verifyToken, (req, res) => {
+
 router.put('/movies/:id', (req, res) => {
     Movie.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then(movie => {
@@ -121,9 +116,8 @@ router.put('/movies/:id', (req, res) => {
         .catch(error => {
             res.status(500).json({ success: false, message: 'Failed to update movie.', error });
         });
-    });
 });
-router.delete('/movies', verifyToken, (req, res) => {
+
 router.delete('/movies/:id', (req, res) => {
     Movie.findByIdAndDelete(req.params.id)
         .then(movie => {
@@ -135,7 +129,6 @@ router.delete('/movies/:id', (req, res) => {
         .catch(error => {
             res.status(500).json({ success: false, message: 'Failed to delete movie.', error });
         });
-    });
 });
 
 router.post('/signup', function(req, res) {
@@ -156,9 +149,9 @@ router.post('/signup', function(req, res) {
             }
 
             res.json({success: true, msg: 'Successfully created new user.'})
-            });
-        }
-    });
+        });
+    }
+});
 
 router.post('/signin', function (req, res) {
     var userNew = new User();
@@ -178,10 +171,10 @@ router.post('/signin', function (req, res) {
             }
             else {
                 res.status(401).send({success: false, msg: 'Authentication failed.'});
-                }
-            })
+            }
         })
-    });
+    })
+});
 
 function verifyToken(req, res, next) {
     var token = req.headers.authorization;
