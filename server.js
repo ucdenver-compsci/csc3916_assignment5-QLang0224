@@ -165,6 +165,25 @@ router.post('/signup', function(req, res) {
         });
     }
 });
+const aggregate = [
+  {
+    $match: { _id: movieId }
+  },
+  {
+    $lookup: {
+      from: 'reviews',
+      localField: '_id',
+      foreignField: 'movieId',
+      as: 'movieReviews'
+    }
+  },
+  {
+    $addFields: {
+      avgRating: { $avg: '$movieReviews.rating' }
+    }
+  }
+];
+Movie.aggregate(aggregate).exec(function(err, doc) { ... });
 
 router.post('/signin', function (req, res) {
     var userNew = new User();
