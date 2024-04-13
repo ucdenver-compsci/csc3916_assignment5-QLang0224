@@ -92,9 +92,9 @@ router.post('/movies', verifyToken, (req, res) => {
 });
 
 router.get('/movies', verifyToken, (req, res) => {
-   Movie.find()
+    Movie.find()
         .then(movies => {
-            res.status(200).json({ success: true, movies });
+            res.status(200).send(movies);
         })
         .catch(error => {
             res.status(500).json({ success: false, message: 'Failed to retrieve movies.', error });
