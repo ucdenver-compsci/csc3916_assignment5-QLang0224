@@ -146,13 +146,9 @@ router.get('/movies/:movieId', verifyToken, (req, res) => {
     ];
     Movie.aggregate(aggregate).exec(function(err, doc) {
         if (err) {
-            res.status(500).send({ success: false, message: 'Failed to retrieve movie details.', error: err });
+            res.status(500).json({ success: false, message: 'Failed to retrieve movies.', error: err });
         } else {
-            if (doc.length === 0) {
-                res.status(404).send({ success: false, message: 'Movie not found.' });
-            } else {
-                res.status(200).send({ success: true, movie: doc[0] }); 
-            }
+            res.status(200).send(movies);
         }
     });
 });
