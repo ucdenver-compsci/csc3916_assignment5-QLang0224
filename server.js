@@ -91,7 +91,7 @@ router.post('/movies', verifyToken, (req, res) => {
 });
 
 router.get('/movies', verifyToken, (req, res) => {
-    Movie.find()
+   Movie.find()
         .then(movies => {
             res.status(200).json({ success: true, movies });
         })
@@ -114,6 +114,7 @@ router.get('/movies/:id', (req, res) => {
 });
 
 router.get('/movies', verifyToken, (req, res) => {
+    if (req.query.reviews === 'true') {
     Movie.aggregate([
         {
             $lookup: {
@@ -138,6 +139,7 @@ router.get('/movies', verifyToken, (req, res) => {
             res.status(200).json({ success: true, movies });
         }
     });
+    }
 });
 
 router.put('/movies/:id', (req, res) => {
