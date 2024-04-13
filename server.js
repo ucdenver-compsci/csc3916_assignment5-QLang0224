@@ -167,19 +167,6 @@ router.post('/signup', function(req, res) {
     }
 });
 
-Movie.aggregate(aggregate).exec(function(err, doc) {Movie.aggregate(aggregate).exec(function(err, doc) {
-    if (err) {
-        res.status(500).json({ success: false, message: 'Failed to retrieve movie details.', error: err });
-    } else {
-        if (doc.length === 0) {
-            res.status(404).json({ success: false, message: 'Movie not found.' });
-        } else {
-            res.status(200).send({ success: true, movie: doc });
-        }
-    }
-});
-});
-
 router.post('/signin', function (req, res) {
     var userNew = new User();
     userNew.username = req.body.username;
