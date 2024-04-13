@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
 var Movie = require('./Movies');
+var Review = require('./Reviews');
 
 var app = express();
 app.use(cors());
@@ -15,6 +16,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
 var router = express.Router();
+
+var SECRET_KEY = process.env.SECRET_KEY;
 
 function getJSONObjectForMovieRequirement(req) {
     var json = {
@@ -33,6 +36,38 @@ function getJSONObjectForMovieRequirement(req) {
 
     return json;
 }
+
+router.post('/reviews', verifyToken, (req, res) => {
+    // Check if request body contains required fields
+    if (!req.body.movieId || !req.body.username || !req.body.review || !req.body.rating) {
+        return res.status(400).json({ success: false, message: 'Missing required fields.' });
+    }
+
+    const newReview = new Review({
+        movieId: req.body.movieId,
+        username: req.body.username,
+        review: req.body.review,
+        rating: req.body.rating
+    });
+
+    newReview.save()
+        .then(review => {
+            res.status(201).json({ success: true, message: 'Review created successfully.', review });
+        })
+        .catch(error => {
+            res.status(500).json({ success: false, message: 'Failed to create review.', error });
+        });
+});
+
+router.get('/reviews', verifyToken, (req, res) => {
+    Review.find()
+        .then(reviews => {
+            res.status(200).json({ success: true, reviews });
+        })
+        .catch(error => {
+            res.status(500).json({ success: false, message: 'Failed to retrieve reviews.', error });
+        });
+});
 
 router.post('/movies', verifyToken, (req, res) => {
     // Check if request body contains required fields
