@@ -118,16 +118,6 @@ router.get('/movies', verifyToken, (req, res) => {
     });
 });
 
-router.get('/movies', verifyToken, (req, res) => {
-   Movie.find()
-        .then(movies => {
-            res.status(200).json({ success: true, movies });
-        })
-        .catch(error => {
-            res.status(500).json({ success: false, message: 'Failed to retrieve movies.', error });
-        });
-});
-
 router.put('/movies/:id', (req, res) => {
     Movie.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then(movie => {
