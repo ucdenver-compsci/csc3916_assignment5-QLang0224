@@ -181,7 +181,7 @@ function verifyToken(req, res, next) {
     if (!token) {
         return res.status(401).json({ success: false, msg: 'No token provided.' });
     }
-    jwt.verify(token.split(' ')[1], JWT_SECRET_KEY, function(err, decoded) {
+    jwt.verify(token.split(' ')[1], SECRET_KEY, function(err, decoded) {
         if (err) {
             return res.status(500).json({ success: false, msg: 'Failed to authenticate token.' });
         }
