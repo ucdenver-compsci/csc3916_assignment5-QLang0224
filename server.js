@@ -119,7 +119,7 @@ router.get('/movies', verifyToken, (req, res) => {
     })
 });
 
-router.get('/movies/:movieId', verifyToken, (req, res) => {
+router.get('/movies/:id', verifyToken, (req, res) => {
     const movieId = req.params.movieId;
 
     if (!movieId) {
@@ -151,7 +151,7 @@ router.get('/movies/:movieId', verifyToken, (req, res) => {
             if (doc.length === 0) {
                 res.status(404).json({ success: false, message: 'Movie not found.' });
             } else {
-                res.status(200).json({ success: true, movie: doc[0] }); // Return movie details
+                res.status(200).json({ success: true, movie: doc[0] });
             }
         }
     });
