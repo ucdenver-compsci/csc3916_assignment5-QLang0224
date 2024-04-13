@@ -92,30 +92,13 @@ router.post('/movies', verifyToken, (req, res) => {
 });
 
 router.get('/movies', verifyToken, (req, res) => {
-    Movie.aggregate([
-        {
-            $lookup: {
-                from: 'reviews',
-                localField: '_id',
-                foreignField: 'movieId',
-                as: 'movieReviews'
-            }
-        },
-        {
-            $addFields: {
-                avgRating: { $avg: '$movieReviews.rating' }
-            }
-        },
-        {
-            $sort: { avgRating: -1 }
-        }
-    ]).exec(function(err, movies) {
-        if (err) {
-            res.status(500).json({ success: false, message: 'Failed to retrieve movies.', error: err });
-        } else {
+   Movie.find()
+        .then(movies => {
             res.status(200).json({ success: true, movies });
-        }
-    });
+        })
+        .catch(error => {
+            res.status(500).json({ success: false, message: 'Failed to retrieve movies.', error });
+        });
 });
 
 router.put('/movies/:id', (req, res) => {
