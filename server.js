@@ -71,14 +71,15 @@ router.get('/reviews', verifyToken, (req, res) => {
 
 router.post('/movies', verifyToken, (req, res) => {
     // Check if request body contains required fields
-    if (!req.body.title || !req.body.releaseDate || !req.body.genre || !req.body.actors) {
+    if (!req.body.title || !req.body.releaseDate || !req.body.genre || !req.body.actors || !req.body.imageUrl) {
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
     }
     const newMovie = new Movie({
         title: req.body.title,
         releaseDate: req.body.releaseDate,
         genre: req.body.genre,
-        actors: req.body.actors
+        actors: req.body.actors,
+        imageUrl: req.body.imageUrl
     });
 
     newMovie.save()
