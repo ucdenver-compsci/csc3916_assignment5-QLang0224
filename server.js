@@ -106,9 +106,9 @@ router.get('/movies/:id', (req, res) => {
         } else {
             res.status(200).json({ success: true, movies });
         }
+        });
     });
 });
-
 router.put('/movies', verifyToken, (req, res) => {
 router.put('/movies/:id', (req, res) => {
     Movie.findByIdAndUpdate(req.params.id, req.body, { new: true })
