@@ -118,6 +118,43 @@ router.get('/movies', verifyToken, (req, res) => {
     })
 });
 
+router.get('/movies/:movieId', verifyToken, (req, res) => {
+    const movieId = req.params.movieId;
+
+    if (!movieId) {
+        return res.status(400).json({ success: false, message: 'Missing movieId.' });
+    }
+    
+    const aggregate = [
+        {
+            $match: { _id: mongoose.Types.ObjectId(movieId) } // Match movie by ID
+        },
+        {
+            $lookup: {
+                from: 'reviews',
+                localField: '_id',
+                foreignField: 'movieId',
+                as: 'movieReviews'
+            }
+        },
+        {
+            $addFields: {
+                avgRating: { $avg: '$movieReviews.rating' } // Calculate average rating
+            }
+        }
+    ];
+    Movie.aggregate(aggregate).exec(function(err, doc) {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Failed to retrieve movie details.', error: err });
+        } else {
+            if (doc.length === 0) {
+                res.status(404).json({ success: false, message: 'Movie not found.' });
+            } else {
+                res.status(200).json({ success: true, movie: doc[0] }); 
+            }
+        }
+    });
+});
 
 router.put('/movies/:id', (req, res) => {
     Movie.findByIdAndUpdate(req.params.id, req.body, { new: true })
