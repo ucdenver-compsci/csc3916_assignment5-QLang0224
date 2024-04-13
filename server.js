@@ -91,17 +91,31 @@ router.post('/movies', verifyToken, (req, res) => {
         });
 });
 
-router.get('/movies/:id', (req, res) => {
-    Movie.findById(req.params.id)
-        .then(movie => {
-            if (!movie) {
-                return res.status(404).json({ success: false, message: 'Movie not found.' });
+router.get('/movies', verifyToken, (req, res) => {
+    Movie.aggregate([
+        {
+            $lookup: {
+                from: 'reviews',
+                localField: '_id',
+                foreignField: 'movieId',
+                as: 'movieReviews'
             }
-            res.status(200).json({ success: true, movie });
-        })
-        .catch(error => {
-            res.status(500).json({ success: false, message: 'Failed to retrieve movie.', error });
-        });
+        },
+        {
+            $addFields: {
+                avgRating: { $avg: '$movieReviews.rating' }
+            }
+        },
+        {
+            $sort: { avgRating: -1 }
+        }
+    ]).exec(function(err, movies) {
+        if (err) {
+            res.status(500).json({ success: false, message: 'Failed to retrieve movies.', error: err });
+        } else {
+            res.status(200).json({ success: true, movies });
+        }
+    });
 });
 
 router.get('/movies', verifyToken, (req, res) => {
