@@ -82,6 +82,7 @@ router.get('/movies/:id', (req, res) => {
 });
 
 router.get('/movies', verifyToken, (req, res) => {
+router.get('/movies/:id', (req, res) => {
     Movie.aggregate([
         {
             $lookup: {
