@@ -122,7 +122,7 @@ router.get('/movies', verifyToken, (req, res) => {
 router.get('/movies/:id', verifyToken, (req, res) => {
     const movieId = req.params.movieId;
 
-    if (!movieId) {
+    if (!movie) {
         return res.status(400).json({ success: false, message: 'Missing movieId.' });
     }
     
