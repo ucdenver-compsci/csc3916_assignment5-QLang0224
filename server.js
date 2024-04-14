@@ -151,7 +151,7 @@ router.get('/movies/:id', verifyToken, (req, res) => {
             if (doc.length === 0) {
                 res.status(404).json({ success: false, message: 'Movie not found.' });
             } else {
-                res.status(200).json({ success: true, movie: movies[0] });
+                res.status(200).send({ success: true, movie: movies[0] });
             }
         }
     });
